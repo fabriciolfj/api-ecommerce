@@ -1,0 +1,17 @@
+{
+  "library": "spring-mvc",
+  "dateLibrary": "java8",
+  "hideGenerationTimestamp": true,
+  "modelPackage": "com.github.fabriciolfj.apiecommerce.model",
+  "apiPackage": "com.github.fabriciolfj.apiecommerce.api",
+  "invokerPackage": "com.github.fabriciolfj.apiecommerce.api",
+  "serializableModel": true,
+  "useTags": true,
+  "useGzipFeature" : true,
+  "hateoas": true,
+  "withXml": true,
+  "importMappings": {
+    "ResourceSupport":"org.springframework.hateoas.RepresentationModel",
+    "Link": "org.springframework.hateoas.Link"
+  }
+}
