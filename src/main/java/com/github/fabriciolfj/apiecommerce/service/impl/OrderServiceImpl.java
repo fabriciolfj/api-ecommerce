@@ -1,7 +1,7 @@
 package com.github.fabriciolfj.apiecommerce.service.impl;
 
 import com.github.fabriciolfj.apiecommerce.entity.OrderEntity;
-import com.github.fabriciolfj.apiecommerce.facade.ValidationNewOrderFacade;
+import com.github.fabriciolfj.apiecommerce.facade.validation.ValidationNewOrderFacade;
 import com.github.fabriciolfj.apiecommerce.model.NewOrder;
 import com.github.fabriciolfj.apiecommerce.repository.OrderRepository;
 import com.github.fabriciolfj.apiecommerce.service.OrderService;

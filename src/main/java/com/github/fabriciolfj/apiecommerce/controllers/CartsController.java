@@ -1,10 +1,12 @@
 package com.github.fabriciolfj.apiecommerce.controllers;
 
 import com.github.fabriciolfj.apiecommerce.api.CartApi;
+import com.github.fabriciolfj.apiecommerce.hateoas.CartRepresentationModelAssembler;
 import com.github.fabriciolfj.apiecommerce.model.Cart;
 import com.github.fabriciolfj.apiecommerce.model.Item;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.fabriciolfj.apiecommerce.service.CartService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,47 +14,53 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
+
+@Log4j2
 @RestController
+@RequiredArgsConstructor
 public class CartsController implements CartApi {
 
-    private static final Logger log = LoggerFactory.getLogger(CartsController.class);
+    private final CartService service;
+    private final CartRepresentationModelAssembler assembler;
 
     @Override
-    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String customerId, @Valid Item item) {
+    public ResponseEntity<List<Item>> addCartItemsByCustomerId(final String customerId, @Valid final Item item) {
         log.info("Request for customer ID: {}\nItem: {}", customerId, item);
-        return ok(Collections.EMPTY_LIST);
+        return ok(service.addCartItemsByCustomerId(customerId, item));
     }
 
     @Override
-    public ResponseEntity<List<Item>> addOrReplaceItemsByCustomerId(String customerId,
-                                                                    @Valid Item item) {
-        return null;
+    public ResponseEntity<List<Item>> addOrReplaceItemsByCustomerId(final String customerId, @Valid final Item item) {
+        return ok(service.addCartItemsByCustomerId(customerId, item));
     }
 
     @Override
-    public ResponseEntity<Void> deleteCart(String customerId) {
-        return null;
+    public ResponseEntity<Void> deleteCart(final String customerId) {
+        service.deleteCart(customerId);
+        return noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> deleteItemFromCart(String customerId, String itemId) {
-        return null;
+    public ResponseEntity<Void> deleteItemFromCart(final String customerId, final String itemId) {
+        service.deleteItemFromCart(customerId, itemId);
+        return noContent().build();
     }
 
     @Override
-    public ResponseEntity<Cart> getCartByCustomerId(String customerId) {
-        return null;
+    public ResponseEntity<Cart> getCartByCustomerId(final String customerId) {
+        return ok(assembler.toModel(service.getCartByCustomerId(customerId)));
     }
 
     @Override
     public ResponseEntity<List<Item>> getCartItemsByCustomerId(String customerId) {
-        return null;
+        return ok(service.getCartItemsByCustomerId(customerId));
     }
 
     @Override
-    public ResponseEntity<Item> getCartItemsByItemId(String customerId, String itemId) {
-        return null;
+    public ResponseEntity<Item> getCartItemsByItemId(final String customerId, final String itemId) {
+        return ok(service.getCartItemsByItemId(customerId, itemId));
     }
 }

@@ -70,6 +70,10 @@ public class CartEntity {
     return this;
   }
 
+  public String getIdUser() {
+    return this.user.getId().toString();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -1,4 +1,4 @@
-package com.github.fabriciolfj.apiecommerce.facade;
+package com.github.fabriciolfj.apiecommerce.facade.validation;
 
 import com.github.fabriciolfj.apiecommerce.exceptions.ResourceNotFoundException;
 import com.github.fabriciolfj.apiecommerce.model.NewOrder;

@@ -3,7 +3,6 @@ package com.github.fabriciolfj.apiecommerce.service.impl;
 import com.github.fabriciolfj.apiecommerce.entity.AuthorizationEntity;
 import com.github.fabriciolfj.apiecommerce.model.PaymentReq;
 import com.github.fabriciolfj.apiecommerce.repository.OrderRepository;
-import com.github.fabriciolfj.apiecommerce.repository.PaymentRepository;
 import com.github.fabriciolfj.apiecommerce.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

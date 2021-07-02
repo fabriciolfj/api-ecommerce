@@ -1,5 +1,9 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -11,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "address")
 public class AddressEntity {

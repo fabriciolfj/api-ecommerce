@@ -1,11 +1,13 @@
 spring:
   datasource:
     name: ecomm
-    url: jdbc:h2:mem:ecomm;DB_CLOSE_DELAY=-1;IGNORECASE=TRUE;DATA_BASE_TO_UPPER=false
+    url: jdbc:h2:mem:ecomm;DB_CLOSE_DELAY=-1;IGNORECASE=TRUE;DATABASE_TO_UPPER=false
     driverClassName: org.h2.Driver
     username: sa
     password:
   jpa:
+    properties:
+      hibernate.default_schema: ecomm
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
     format_sql: true
@@ -13,6 +15,10 @@ spring:
     hibernate:
       ddl-auto: none
   flyway:
-    url: jdbc:h2:ecomm
+    url: jdbc:h2:mem:ecomm
     shemas: ecomm
     user: sa
+    password:
+  h2:
+    console.enabled: true
+    console.settings.web-allow-others: false

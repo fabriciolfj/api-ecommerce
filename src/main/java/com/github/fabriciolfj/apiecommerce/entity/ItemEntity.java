@@ -1,5 +1,9 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
@@ -14,117 +18,107 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * @author : github.com/sharmasourabh
- * @project : Chapter04 - Modern API Development with Spring and Spring Boot
- **/
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "item")
 public class ItemEntity {
 
-  @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
-  private UUID id;
+    @Id
+    @GeneratedValue
+    @Column(name = "ID", updatable = false, nullable = false)
+    private UUID id;
 
-  @ManyToOne
-  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
-  private ProductEntity product;
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+    private ProductEntity product;
 
-  @Column(name = "UNIT_PRICE")
-  private BigDecimal price;
+    @Column(name = "UNIT_PRICE")
+    private BigDecimal price;
 
-  @Column(name = "QUANTITY")
-  private int quantity;
+    @Column(name = "QUANTITY")
+    private int quantity;
 
-  @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-  private List<CartEntity> cart;
+    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
+    private List<CartEntity> cart;
 
-  @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-  private List<OrderEntity> orders;
+    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
+    private List<OrderEntity> orders;
 
-  public UUID getId() {
-    return id;
-  }
-
-  public ItemEntity setId(UUID id) {
-    this.id = id;
-    return this;
-  }
-
-  public ProductEntity getProduct() {
-    return product;
-  }
-
-  public ItemEntity setProduct(ProductEntity product) {
-    this.product = product;
-    return this;
-  }
-
-  public BigDecimal getPrice() {
-    return price;
-  }
-
-  public ItemEntity setPrice(BigDecimal price) {
-    this.price = price;
-    return this;
-  }
-
-  public int getQuantity() {
-    return quantity;
-  }
-
-  public ItemEntity setQuantity(int quantity) {
-    this.quantity = quantity;
-    return this;
-  }
-
-/*  public CartEntity getCart() {
-    return cart;
-  }
-
-  public ItemEntity setCart(CartEntity cart) {
-    this.cart = cart;
-    return this;
-  }*/
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public UUID getId() {
+        return id;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public ItemEntity setId(UUID id) {
+        this.id = id;
+        return this;
     }
-    ItemEntity that = (ItemEntity) o;
-    return quantity == that.quantity && product.equals(that.product) && Objects
-        .equals(price, that.price);// && Objects.equals(cart, that.cart);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(product, price, quantity);//, cart);
-  }
+    public ProductEntity getProduct() {
+        return product;
+    }
 
-  public List<CartEntity> getCart() {
-    return cart;
-  }
+    public ItemEntity setProduct(ProductEntity product) {
+        this.product = product;
+        return this;
+    }
 
-  public ItemEntity setCart(List<CartEntity> cart) {
-    this.cart = cart;
-    return this;
-  }
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-  public List<OrderEntity> getOrders() {
-    return orders;
-  }
+    public ItemEntity setPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
 
-  public ItemEntity setOrders(List<OrderEntity> orders) {
-    this.orders = orders;
-    return this;
-  }
+    public int getQuantity() {
+        return quantity;
+    }
 
-  public boolean isProductExists(final String id) {
-    return this.product.getId().equals(UUID.fromString(id));
-  }
+    public ItemEntity setQuantity(int quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemEntity that = (ItemEntity) o;
+        return quantity == that.quantity && product.equals(that.product) && Objects
+                .equals(price, that.price);// && Objects.equals(cart, that.cart);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, price, quantity);//, cart);
+    }
+
+    public List<CartEntity> getCart() {
+        return cart;
+    }
+
+    public ItemEntity setCart(List<CartEntity> cart) {
+        this.cart = cart;
+        return this;
+    }
+
+    public List<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public ItemEntity setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
+        return this;
+    }
+
+    public boolean isProductExists(final String id) {
+        return this.product.getId().equals(UUID.fromString(id));
+    }
 }

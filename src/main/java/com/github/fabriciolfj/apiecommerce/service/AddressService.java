@@ -6,8 +6,12 @@ import com.github.fabriciolfj.apiecommerce.model.AddAddressReq;
 import java.util.Optional;
 
 public interface AddressService {
-  Optional<AddressEntity> createAddress(final AddAddressReq addAddressReq);
-  void deleteAddressesById(String id);
-  Optional<AddressEntity> getAddressesById(String id);
-  Iterable<AddressEntity> getAllAddresses();
+
+    Optional<AddressEntity> createAddress(final AddAddressReq addAddressReq);
+
+    void deleteAddressesById(String id);
+
+    Optional<AddressEntity> getAddressesById(String id);
+
+    Iterable<AddressEntity> getAllAddresses();
 }

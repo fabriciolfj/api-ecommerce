@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ItemService {
 
-  ItemEntity toEntity(Item m);
+  ItemEntity create(Item m);
 
   List<ItemEntity> toEntityList(List<Item> items);
 

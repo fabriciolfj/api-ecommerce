@@ -17,8 +17,7 @@ public class ShipmentServiceImpl implements ShipmentService {
   private final ShipmentRepository repository;
 
   @Override
-  public Iterable<ShipmentEntity> getShipmentByOrderId(
-      @Min(value = 1L, message = "Invalid shipment ID.") String id) {
+  public Iterable<ShipmentEntity> getShipmentByOrderId(@Min(value = 1L, message = "Invalid shipment ID.") final String id) {
     return repository.findAllById(List.of(UUID.fromString(id)));
   }
 }

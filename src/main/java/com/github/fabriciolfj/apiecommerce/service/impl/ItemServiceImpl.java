@@ -1,27 +1,27 @@
 package com.github.fabriciolfj.apiecommerce.service.impl;
 
 import com.github.fabriciolfj.apiecommerce.entity.ItemEntity;
-import com.github.fabriciolfj.apiecommerce.entity.ProductEntity;
+import com.github.fabriciolfj.apiecommerce.facade.converters.ItemConverter;
 import com.github.fabriciolfj.apiecommerce.model.Item;
 import com.github.fabriciolfj.apiecommerce.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private final ItemConverter itemConverter;
+
     @Override
-    public ItemEntity toEntity(final Item m) {
-        ItemEntity e = new ItemEntity();
-        e.setProduct(new ProductEntity().setId(UUID.fromString(m.getId()))).setPrice(m.getUnitPrice())
-                .setQuantity(m.getQuantity());
-        return e;
+    public ItemEntity create(final Item m) {
+        return itemConverter.toEntity(m);
     }
 
     @Override
@@ -29,7 +29,8 @@ public class ItemServiceImpl implements ItemService {
         if (Objects.isNull(items)) {
             return Collections.emptyList();
         }
-        return items.stream().map(m -> toEntity(m)).collect(toList());
+
+        return items.stream().map(m -> create(m)).collect(toList());
     }
 
     @Override

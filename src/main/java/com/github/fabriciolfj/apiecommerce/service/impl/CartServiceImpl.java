@@ -3,8 +3,8 @@ package com.github.fabriciolfj.apiecommerce.service.impl;
 import com.github.fabriciolfj.apiecommerce.entity.CartEntity;
 import com.github.fabriciolfj.apiecommerce.entity.ItemEntity;
 import com.github.fabriciolfj.apiecommerce.exceptions.CustomerNotFoundException;
-import com.github.fabriciolfj.apiecommerce.exceptions.GenericAlreadyExistsException;
 import com.github.fabriciolfj.apiecommerce.exceptions.ItemNotFoundException;
+import com.github.fabriciolfj.apiecommerce.facade.validation.ValidationCartFacade;
 import com.github.fabriciolfj.apiecommerce.model.Item;
 import com.github.fabriciolfj.apiecommerce.repository.CartRepository;
 import com.github.fabriciolfj.apiecommerce.repository.UserRepository;
@@ -20,10 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.objenesis.instantiator.util.UnsafeUtils.getUnsafe;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +30,14 @@ public class CartServiceImpl implements CartService {
     private final CartRepository repository;
     private final UserRepository userRepo;
     private final ItemService itemService;
+    private final ValidationCartFacade validationCartFacade;
 
     @Override
     public List<Item> addCartItemsByCustomerId(final String customerId, @Valid final Item item) {
         final var entity = getCartByCustomerId(customerId);
-        validaItemExists(item, entity);
+        validationCartFacade.execute(item, entity);
 
-        entity.getItems().add(itemService.toEntity(item));
+        entity.getItems().add(itemService.create(item));
         return itemService.toModelList(repository.save(entity).getItems());
     }
 
@@ -58,7 +57,7 @@ public class CartServiceImpl implements CartService {
         });
 
         if (!itemExists.get()) {
-            items.add(itemService.toEntity(item));
+            items.add(itemService.create(item));
         }
 
         return itemService.toModelList(repository.save(entity).getItems());
@@ -108,15 +107,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ItemNotFoundException(String.format(" - %s", itemId)));
     }
 
-    private void validaItemExists(Item item, CartEntity entity) {
-        long count = entity.getItems().stream()
-                .filter(i -> i.getProduct().getId().equals(UUID.fromString(item.getId()))).count();
 
-        if (count > 0) {
-            throw new GenericAlreadyExistsException(
-                    String.format("Item with Id (%s) already exists. You can update it.", item.getId()));
-        }
-    }
 
     private void setUserIsExists(final String customerId, final CartEntity entity) {
         if (Objects.isNull(entity.getUser())) {

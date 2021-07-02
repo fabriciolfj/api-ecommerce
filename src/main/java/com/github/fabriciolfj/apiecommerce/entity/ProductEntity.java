@@ -1,5 +1,9 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +21,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "product")
 public class ProductEntity {
@@ -62,9 +69,6 @@ public class ProductEntity {
     this.description = description;
     this.count = count;
     this.imageUrl = imageUrl;
-  }
-
-  public ProductEntity() {
   }
 
   public UUID getId() {
