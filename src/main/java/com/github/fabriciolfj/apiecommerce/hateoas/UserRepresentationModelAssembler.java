@@ -1,57 +1,74 @@
 package com.github.fabriciolfj.apiecommerce.hateoas;
 
-import com.github.fabriciolfj.apiecommerce.controllers.CustomerController;
 import com.github.fabriciolfj.apiecommerce.entity.UserEntity;
 import com.github.fabriciolfj.apiecommerce.model.User;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
-public class UserRepresentationModelAssembler extends
-    RepresentationModelAssemblerSupport<UserEntity, User> {
+public class UserRepresentationModelAssembler implements
+        ReactiveRepresentationModelAssembler<UserEntity, User>, HateoasSupport {
 
-  public UserRepresentationModelAssembler() {
-    super(CustomerController.class, User.class);
-  }
+    private static String serverUri = null;
 
-  @Override
-  public User toModel(UserEntity entity) {
-    final var resource = createModelWithId(entity.getId(), entity);
-    BeanUtils.copyProperties(entity, resource);
-    updateResources(entity, resource);
-    return resource;
-  }
-
-  private void updateResources(UserEntity entity, User resource) {
-    resource.setId(entity.getId().toString());
-    resource.add(
-        linkTo(methodOn(CustomerController.class).getCustomerById(entity.getId().toString()))
-            .withSelfRel());
-    resource.add(
-        linkTo(methodOn(CustomerController.class).getAllCustomers()).withRel("customers"));
-    resource
-        .add(
-            linkTo(methodOn(CustomerController.class)
-                .getAddressesByCustomerId(entity.getId().toString())).withRel("self_addresses"));
-  }
-
-  public List<User> toListModel(Iterable<UserEntity> entities) {
-    if (Objects.isNull(entities)) {
-      return Collections.emptyList();
+    private String getServerUri(@Nullable ServerWebExchange exchange) {
+        if (Strings.isBlank(serverUri)) {
+            serverUri = getUriComponentBuilder(exchange).toUriString();
+        }
+        return serverUri;
     }
 
-    return StreamSupport.stream(entities.spliterator(), false).map(e -> toModel(e))
-        .collect(toList());
-  }
+    /**
+     * Coverts the User entity to resource
+     *
+     * @param entity
+     */
+    @Override
+    public Mono<User> toModel(UserEntity entity, ServerWebExchange exchange) {
+        return Mono.just(entityToModel(entity, exchange));
+    }
 
+    public User entityToModel(UserEntity entity, ServerWebExchange exchange) {
+        User resource = new User();
+        if (Objects.isNull(entity)) {
+            return resource;
+        }
+        BeanUtils.copyProperties(entity, resource);
+        resource.setId(entity.getId().toString());
+        String serverUri = getServerUri(exchange);
+        resource.add(Link.of(String.format("%s/api/v1/customers", serverUri)).withRel("customers"));
+        resource
+                .add(Link.of(String.format("%s/api/v1/customers/%s", serverUri, entity.getId())).withSelfRel());
+        resource
+                .add(Link.of(String.format("%s/api/v1/customers/%s/addresses", serverUri, entity.getId())).withRel("self_addresses"));
+        return resource;
+    }
+
+    public User getModel(Mono<User> m, ServerWebExchange exchange) {
+        AtomicReference<User> model = new AtomicReference<>();
+        m.cache().subscribe(i -> model.set(i));
+        return model.get();
+    }
+
+    /**
+     * Coverts the collection of Product entities to list of resources.
+     *
+     * @param entities
+     */
+    public Flux<User> toListModel(Flux<UserEntity> entities, ServerWebExchange exchange) {
+        if (Objects.isNull(entities)) {
+            return Flux.empty();
+        }
+        return Flux.from(entities.map(e -> entityToModel(e, exchange)));
+    }
 }

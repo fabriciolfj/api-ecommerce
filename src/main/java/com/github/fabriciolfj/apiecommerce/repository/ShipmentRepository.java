@@ -2,9 +2,10 @@ package com.github.fabriciolfj.apiecommerce.repository;
 
 import com.github.fabriciolfj.apiecommerce.entity.ShipmentEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.util.UUID;
 
-public interface ShipmentRepository extends CrudRepository<ShipmentEntity, UUID> {
+public interface ShipmentRepository extends ReactiveCrudRepository<ShipmentEntity, UUID> {
 }
 

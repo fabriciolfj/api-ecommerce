@@ -3,52 +3,43 @@ package com.github.fabriciolfj.apiecommerce.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "address")
+@Table("address")
 public class AddressEntity {
+
   @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
+  @Column("ID")
   private UUID id;
 
-  @Column(name = "NUMBER")
+  @Column("NUMBER")
   private String number;
 
-  @Column(name = "RESIDENCY")
+  @Column("RESIDENCY")
   private String residency;
 
-  @Column(name = "STREET")
+  @Column("STREET")
   private String street;
 
-  @Column(name = "CITY")
+  @Column("CITY")
   private String city;
 
-  @Column(name = "STATE")
+  @Column("STATE")
   private String state;
 
-  @Column(name = "COUNTRY")
+  @Column("COUNTRY")
   private String country;
 
-  @Column(name = "PINCODE")
+  @Column("PINCODE")
   private String pincode;
-
-  @OneToMany(mappedBy = "addressEntity", fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<OrderEntity> orders;
 
   public UUID getId() {
     return id;
@@ -119,15 +110,6 @@ public class AddressEntity {
 
   public AddressEntity setPincode(String pincode) {
     this.pincode = pincode;
-    return this;
-  }
-
-  public List<OrderEntity> getOrders() {
-    return orders;
-  }
-
-  public AddressEntity setOrders(List<OrderEntity> orders) {
-    this.orders = orders;
     return this;
   }
 }

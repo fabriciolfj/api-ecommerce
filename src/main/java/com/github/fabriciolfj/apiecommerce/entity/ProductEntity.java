@@ -1,145 +1,126 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "product")
+@Table("product")
 public class ProductEntity {
 
-  @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
-  private UUID id;
+    @Id
+    @Column("id")
+    private UUID id;
 
-  @NotNull(message = "Product name is required.")
-  @Basic(optional = false)
-  @Column(name = "NAME")
-  private String name;
+    @NotNull(message = "Product name is required.")
+    @Column("name")
+    private String name;
 
-  @Column(name = "DESCRIPTION")
-  private String description;
+    @Column("description")
+    private String description;
 
-  @Column(name = "PRICE")
-  private BigDecimal price;
+    @Column("price")
+    private BigDecimal price;
 
-  @Column(name = "COUNT")
-  private int count;
+    @Column("count")
+    private int count;
 
-  @Column(name = "IMAGE_URL")
-  private String imageUrl;
+    @Column("image_url")
+    private String imageUrl;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinTable(
-      name = "PRODUCT_TAG",
-      joinColumns = @JoinColumn(name = "PRODUCT_ID"),
-      inverseJoinColumns = @JoinColumn(name = "TAG_ID")
-  )
-  private List<TagEntity> tags = Collections.emptyList();;
+    @Transient
+    private List<TagEntity> tags = Collections.emptyList();
 
-  @OneToMany(mappedBy = "product")
-  private List<ItemEntity> items;
+    private ItemEntity item;
 
-  public ProductEntity(UUID id, @NotNull(message = "Product name is required.") String name,
-      String description, BigDecimal price, int count, String imageUrl) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-    this.description = description;
-    this.count = count;
-    this.imageUrl = imageUrl;
-  }
+    public ProductEntity(UUID id, @NotNull(message = "Product name is required.") String name,
+                         String description, BigDecimal price, int count, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.count = count;
+        this.imageUrl = imageUrl;
+    }
 
-  public UUID getId() {
-    return id;
-  }
+    public ProductEntity() {
+    }
 
-  public ProductEntity setId(UUID id) {
-    this.id = id;
-    return this;
-  }
+    public UUID getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public ProductEntity setId(UUID id) {
+        this.id = id;
+        return this;
+    }
 
-  public ProductEntity setName(String name) {
-    this.name = name;
-    return this;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public ProductEntity setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-  public ProductEntity setDescription(String description) {
-    this.description = description;
-    return this;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public BigDecimal getPrice() {
-    return price;
-  }
+    public ProductEntity setDescription(String description) {
+        this.description = description;
+        return this;
+    }
 
-  public ProductEntity setPrice(BigDecimal price) {
-    this.price = price;
-    return this;
-  }
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-  public int getCount() {
-    return count;
-  }
+    public ProductEntity setPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
 
-  public ProductEntity setCount(int count) {
-    this.count = count;
-    return this;
-  }
+    public int getCount() {
+        return count;
+    }
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    public ProductEntity setCount(int count) {
+        this.count = count;
+        return this;
+    }
 
-  public ProductEntity setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-    return this;
-  }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-  public List<TagEntity> getTags() {
-    return tags;
-  }
+    public ProductEntity setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        return this;
+    }
 
-  public ProductEntity setTags(List<TagEntity> tags) {
-    this.tags = tags;
-    return this;
-  }
+    public List<TagEntity> getTags() {
+        return tags;
+    }
 
-  public List<ItemEntity> getItem() {
-    return items;
-  }
+    public ProductEntity setTags(List<TagEntity> tags) {
+        this.tags = tags;
+        return this;
+    }
 
-  public ProductEntity setItem(List<ItemEntity> item) {
-    this.items = item;
-    return this;
-  }
+    public ItemEntity getItem() {
+        return item;
+    }
+
+    public ProductEntity setItem(ItemEntity item) {
+        this.item = item;
+        return this;
+    }
 }

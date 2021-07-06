@@ -1,51 +1,73 @@
 package com.github.fabriciolfj.apiecommerce.hateoas;
 
-import com.github.fabriciolfj.apiecommerce.controllers.CardController;
 import com.github.fabriciolfj.apiecommerce.entity.CardEntity;
 import com.github.fabriciolfj.apiecommerce.model.Card;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
-public class CardRepresentationModelAssembler extends RepresentationModelAssemblerSupport<CardEntity, Card> {
+public class CardRepresentationModelAssembler implements
+        ReactiveRepresentationModelAssembler<CardEntity, Card>, HateoasSupport {
 
-    public CardRepresentationModelAssembler() {
-        super(CardController.class, Card.class);
+    private static String serverUri = null;
+
+    private String getServerUri(@Nullable ServerWebExchange exchange) {
+        if (Strings.isBlank(serverUri)) {
+            serverUri = getUriComponentBuilder(exchange).toUriString();
+        }
+        return serverUri;
     }
 
+    /**
+     * Coverts the Card entity to resource
+     *
+     * @param entity
+     */
     @Override
-    public Card toModel(final CardEntity entity) {
-        String uid = Objects.nonNull(entity.getUser()) ? entity.getUser().getId().toString() : null;
-        Card resource = createModelWithId(entity.getId(), entity);
+    public Mono<Card> toModel(CardEntity entity, ServerWebExchange exchange) {
+        return Mono.just(entityToModel(entity, exchange));
+    }
+
+    public Card entityToModel(CardEntity entity, ServerWebExchange exchange) {
+        Card resource = new Card();
+        if (Objects.isNull(entity)) {
+            return resource;
+        }
         BeanUtils.copyProperties(entity, resource);
-        updateResource(entity, uid, resource);
+        resource.setId(Objects.nonNull(entity.getId()) ? entity.getId().toString() : "");
+        resource.setCardNumber(entity.getNumber());
+        String serverUri = getServerUri(exchange);
+        resource.add(Link.of(String.format("%s/api/v1/cards", serverUri)).withRel("cards"));
+        resource.add(
+                Link.of(String.format("%s/api/v1/cards/%s", serverUri, entity.getId())).withRel("self"));
         return resource;
     }
 
-    private void updateResource(final CardEntity entity, final String uid, final Card resource) {
-        resource.id(
-                entity.getId().toString())
-                .cardNumber(entity.getNumber())
-                .cvv(entity.getCvv())
-                .expires(entity.getExpires())
-                .userId(uid);
-
-        resource.add(linkTo(methodOn(CardController.class).getCardById(entity.getId().toString())).withSelfRel());
+    public Card getModel(Mono<Card> m, ServerWebExchange exchange) {
+        AtomicReference<Card> model = new AtomicReference<>();
+        m.cache().subscribe(i -> model.set(i));
+        return model.get();
     }
 
-    public List<Card> toListModel(Iterable<CardEntity> entities) {
-        if (Objects.isNull(entities)) return Collections.emptyList();
-        return StreamSupport.stream(entities.spliterator(), false).map(e -> toModel(e)).collect(toList());
+    /**
+     * Coverts the collection of Product entities to list of resources.
+     *
+     * @param entities
+     */
+    public Flux<Card> toListModel(Flux<CardEntity> entities, ServerWebExchange exchange) {
+        if (Objects.isNull(entities)) {
+            return Flux.empty();
+        }
+        return Flux.from(entities.map(e -> entityToModel(e, exchange)));
     }
-
 }

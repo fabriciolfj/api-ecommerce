@@ -1,43 +1,38 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
-import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name = "tag")
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
+
+@Table("tag")
 public class TagEntity {
 
-  @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
-  private UUID id;
+    @Id
+    @Column("id")
+    private UUID id;
 
-  @NotNull(message = "Product name is required.")
-  @Basic(optional = false)
-  @Column(name = "NAME")
-  private String name;
+    @NotNull(message = "Product name is required.")
+    @Column("name")
+    private String name;
 
-  public UUID getId() {
-    return id;
-  }
+    public UUID getId() {
+        return id;
+    }
 
-  public TagEntity setId(UUID id) {
-    this.id = id;
-    return this;
-  }
+    public TagEntity setId(UUID id) {
+        this.id = id;
+        return this;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public TagEntity setName(String name) {
-    this.name = name;
-    return this;
-  }
+    public TagEntity setName(String name) {
+        this.name = name;
+        return this;
+    }
 }

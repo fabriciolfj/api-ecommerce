@@ -7,8 +7,9 @@ import com.github.fabriciolfj.apiecommerce.repository.AddressRepository;
 import com.github.fabriciolfj.apiecommerce.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,22 +20,28 @@ public class AddressServiceImpl implements AddressService {
     private final AddressConverter addressConverter;
 
     @Override
-    public Optional<AddressEntity> createAddress(final AddAddressReq addAddressReq) {
-        return Optional.of(repository.save(addressConverter.toEntity(addAddressReq)));
+    public Mono<AddressEntity> createAddress(final Mono<AddAddressReq> addAddressReq) {
+        return addAddressReq.map(addressConverter::toEntity)
+                .flatMap(e -> Mono.just(e));
     }
 
     @Override
-    public void deleteAddressesById(String id) {
-        repository.deleteById(UUID.fromString(id));
+    public Mono<Void> deleteAddressesById(final String id) {
+        return repository.deleteById(UUID.fromString(id));
     }
 
     @Override
-    public Optional<AddressEntity> getAddressesById(String id) {
+    public Mono<Void> deleteAddressesById(final UUID id) {
+        return repository.deleteById(id);
+    }
+
+    @Override
+    public Mono<AddressEntity> getAddressesById(final String id) {
         return repository.findById(UUID.fromString(id));
     }
 
     @Override
-    public Iterable<AddressEntity> getAllAddresses() {
+    public Flux<AddressEntity> getAllAddresses() {
         return repository.findAll();
     }
 }

@@ -2,13 +2,10 @@ package com.github.fabriciolfj.apiecommerce.repository;
 
 import com.github.fabriciolfj.apiecommerce.entity.AuthorizationEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.util.UUID;
 
-/**
- * @author : github.com/sharmasourabh
- * @project : Chapter04 - Modern API Development with Spring and Spring Boot
- **/
-public interface AuthorizationRepository extends CrudRepository<AuthorizationEntity, UUID> {
+public interface AuthorizationRepository extends ReactiveCrudRepository<AuthorizationEntity, UUID> {
 }
 

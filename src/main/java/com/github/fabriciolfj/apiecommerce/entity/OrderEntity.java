@@ -1,194 +1,261 @@
 package com.github.fabriciolfj.apiecommerce.entity;
 
 import com.github.fabriciolfj.apiecommerce.model.Order;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
-/**
- * @author : github.com/sharmasourabh
- * @project : Chapter04 - Modern API Development with Spring and Spring Boot
- **/
-@Entity
-@Table(name = "orders")
+@Table("orders")
 public class OrderEntity {
-  @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
-  private UUID id;
 
-  @Column(name = "TOTAL")
-  private BigDecimal total;
+    @Id
+    @Column("id")
+    private UUID id;
 
-  @Column(name = "STATUS")
-  @Enumerated(EnumType.STRING)
-  private Order.StatusEnum status;
+    @Column("customer_id")
+    private UUID customerId;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name="CUSTOMER_ID", nullable=false)
-  private UserEntity userEntity;
+    @Column("address_id")
+    private UUID addressId;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID", insertable=false, updatable=false)
-  private AddressEntity addressEntity;
+    @Column("card_id")
+    private UUID cardId;
 
-  @OneToOne(cascade = CascadeType.ALL )
-  @JoinColumn(name = "PAYMENT_ID", referencedColumnName = "ID")
-  private PaymentEntity paymentEntity;
+    @Column("order_date")
+    private Timestamp orderDate;
 
-  @JoinColumn(name = "SHIPMENT_ID", referencedColumnName = "ID")
-  @OneToOne
-  private ShipmentEntity shipment;
+    @Column("total")
+    private BigDecimal total;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "CARD_ID", referencedColumnName = "ID")
-  private CardEntity cardEntity;
+    @Column("payment_id")
+    private UUID paymentId;
 
-  @Column(name = "ORDER_DATE")
-  private Timestamp orderDate;
+    @Column("shipment_id")
+    private UUID shipmentId;
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "ORDER_ITEM",
-      joinColumns = @JoinColumn(name = "ORDER_ID"),
-      inverseJoinColumns = @JoinColumn(name = "ITEM_ID")
-  )
-  private List<ItemEntity> items = Collections.emptyList();
+    @Column("status")
+    private Order.StatusEnum status;
 
-  @OneToOne(mappedBy = "orderEntity")
-  private AuthorizationEntity authorizationEntity;
+    private UUID cartId;
 
-  public UUID getId() {
-    return id;
-  }
+    private UserEntity userEntity;
 
-  public OrderEntity setId(UUID id) {
-    this.id = id;
-    return this;
-  }
+    private AddressEntity addressEntity;
 
-  public BigDecimal getTotal() {
-    return total;
-  }
+    private PaymentEntity paymentEntity;
 
-  public OrderEntity setTotal(BigDecimal total) {
-    this.total = total;
-    return this;
-  }
+    private List<ShipmentEntity> shipments = Collections.emptyList();
 
-  public Order.StatusEnum getStatus() {
-    return status;
-  }
+    private CardEntity cardEntity;
 
-  public OrderEntity setStatus(Order.StatusEnum status) {
-    this.status = status;
-    return this;
-  }
+    private List<ItemEntity> items = Collections.emptyList();
 
-  public UserEntity getUserEntity() {
-    return userEntity;
-  }
+    private AuthorizationEntity authorizationEntity;
 
-  public OrderEntity setUserEntity(UserEntity userEntity) {
-    this.userEntity = userEntity;
-    return this;
-  }
+    public UUID getId() {
+        return id;
+    }
 
-  public AddressEntity getAddressEntity() {
-    return addressEntity;
-  }
+    public OrderEntity setId(UUID id) {
+        this.id = id;
+        return this;
+    }
 
-  public OrderEntity setAddressEntity(AddressEntity addressEntity) {
-    this.addressEntity = addressEntity;
-    return this;
-  }
+    public BigDecimal getTotal() {
+        return total;
+    }
 
-  public PaymentEntity getPaymentEntity() {
-    return paymentEntity;
-  }
+    public OrderEntity setTotal(BigDecimal total) {
+        this.total = total;
+        return this;
+    }
 
-  public OrderEntity setPaymentEntity(PaymentEntity paymentEntity) {
-    this.paymentEntity = paymentEntity;
-    return this;
-  }
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
 
-  public ShipmentEntity getShipments() {
-    return shipment;
-  }
+    public OrderEntity setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+        return this;
+    }
 
-  public OrderEntity setShipments(ShipmentEntity shipment) {
-    this.shipment = shipment;
-    return this;
-  }
+    public AddressEntity getAddressEntity() {
+        return addressEntity;
+    }
 
-  public CardEntity getCardEntity() {
-    return cardEntity;
-  }
+    public OrderEntity setAddressEntity(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+        return this;
+    }
 
-  public OrderEntity setCardEntity(CardEntity cardEntity) {
-    this.cardEntity = cardEntity;
-    return this;
-  }
+    public PaymentEntity getPaymentEntity() {
+        return paymentEntity;
+    }
 
-  public Timestamp getOrderDate() {
-    return orderDate;
-  }
+    public OrderEntity setPaymentEntity(PaymentEntity paymentEntity) {
+        this.paymentEntity = paymentEntity;
+        return this;
+    }
 
-  public OrderEntity setOrderDate(Timestamp orderDate) {
-    this.orderDate = orderDate;
-    return this;
-  }
+    public List<ShipmentEntity> getShipments() {
+        return shipments;
+    }
 
-  public List<ItemEntity> getItems() {
-    return items;
-  }
+    public OrderEntity setShipments(List<ShipmentEntity> shipments) {
+        this.shipments = shipments;
+        return this;
+    }
 
-  public OrderEntity setItems(List<ItemEntity> items) {
-    this.items = items;
-    return this;
-  }
+    public CardEntity getCardEntity() {
+        return cardEntity;
+    }
 
-  public AuthorizationEntity getAuthorizationEntity() {
-    return authorizationEntity;
-  }
+    public OrderEntity setCardEntity(CardEntity cardEntity) {
+        this.cardEntity = cardEntity;
+        return this;
+    }
 
-  public OrderEntity setAuthorizationEntity(
-      AuthorizationEntity authorizationEntity) {
-    this.authorizationEntity = authorizationEntity;
-    return this;
-  }
+    public Timestamp getOrderDate() {
+        return orderDate;
+    }
 
-  @Override
-  public String toString() {
-    return "OrderEntity{" +
-        "id=" + id +
-        ", total=" + total +
-        ", status=" + status +
-        ", userEntity=" + userEntity +
-        ", addressEntity=" + addressEntity +
-        ", paymentEntity=" + paymentEntity +
-        ", shipment=" + shipment +
-        ", cardEntity=" + cardEntity +
-        ", orderDate=" + orderDate +
-        ", items=" + items +
-        ", authorizationEntity=" + authorizationEntity +
-        '}';
-  }
+    public OrderEntity setOrderDate(Timestamp orderDate) {
+        this.orderDate = orderDate;
+        return this;
+    }
+
+    public List<ItemEntity> getItems() {
+        return items;
+    }
+
+    public OrderEntity setItems(List<ItemEntity> items) {
+        this.items = items;
+        return this;
+    }
+
+    public AuthorizationEntity getAuthorizationEntity() {
+        return authorizationEntity;
+    }
+
+    public OrderEntity setAuthorizationEntity(
+            AuthorizationEntity authorizationEntity) {
+        this.authorizationEntity = authorizationEntity;
+        return this;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public OrderEntity setCustomerId(UUID customerId) {
+        this.customerId = customerId;
+        return this;
+    }
+
+    public UUID getAddressId() {
+        return addressId;
+    }
+
+    public OrderEntity setAddressId(UUID addressId) {
+        this.addressId = addressId;
+        return this;
+    }
+
+    public UUID getCardId() {
+        return cardId;
+    }
+
+    public OrderEntity setCardId(UUID cardId) {
+        this.cardId = cardId;
+        return this;
+    }
+
+    public UUID getPaymentId() {
+        return paymentId;
+    }
+
+    public OrderEntity setPaymentId(UUID paymentId) {
+        this.paymentId = paymentId;
+        return this;
+    }
+
+    public UUID getShipmentId() {
+        return shipmentId;
+    }
+
+    public OrderEntity setShipmentId(UUID shipmentId) {
+        this.shipmentId = shipmentId;
+        return this;
+    }
+
+    public OrderEntity setStatus(Order.StatusEnum status) {
+        this.status = status;
+        return this;
+    }
+
+    public UUID getCartId() {
+        return cartId;
+    }
+
+    public OrderEntity setCartId(UUID cartId) {
+        this.cartId = cartId;
+        return this;
+    }
+
+    public Order.StatusEnum getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OrderEntity entity = (OrderEntity) o;
+        return Objects.equals(id, entity.id) && Objects
+                .equals(customerId, entity.customerId) && Objects
+                .equals(addressId, entity.addressId) && Objects.equals(cardId, entity.cardId)
+                && Objects.equals(orderDate, entity.orderDate) && Objects
+                .equals(total, entity.total) && Objects.equals(paymentId, entity.paymentId)
+                && Objects.equals(shipmentId, entity.shipmentId) && status == entity.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+                .hash(id, customerId, addressId, cardId, orderDate, total, paymentId, shipmentId, status);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", addressId=" + addressId +
+                ", cardId=" + cardId +
+                ", orderDate=" + orderDate +
+                ", total=" + total +
+                ", paymentId=" + paymentId +
+                ", shipmentId=" + shipmentId +
+                ", status=" + status +
+                ", cartId=" + cartId +
+                ", userEntity=" + userEntity +
+                ", addressEntity=" + addressEntity +
+                ", paymentEntity=" + paymentEntity +
+                ", shipments=" + shipments +
+                ", cardEntity=" + cardEntity +
+                ", items=" + items +
+                ", authorizationEntity=" + authorizationEntity +
+                '}';
+    }
 }

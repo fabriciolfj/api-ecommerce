@@ -37,16 +37,16 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.flywaydb:flyway-core'
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'io.r2dbc:r2dbc-h2'
 
 	swaggerCodegen 'org.openapitools:openapi-generator-cli:4.3.1'
 	compileOnly 'io.swagger:swagger-annotations:1.6.2'
@@ -55,6 +55,15 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+configurations.all {
+	resolutionStrategy.dependencySubstitution.all { dependency ->
+		if (dependency.requested instanceof ModuleComponentSelector && dependency.requested.module == 'spring-boot-starter-reactor-netty') {
+			dependency.useTarget("org.springframework.boot:spring-boot-starter-tomcat:$dependency.requested.version", 'Use Undertow instead of Reactor Netty')
+		}
+	}
 }
 
 test {

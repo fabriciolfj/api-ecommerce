@@ -3,45 +3,40 @@ package com.github.fabriciolfj.apiecommerce.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "card")
+@Table("card")
 public class CardEntity {
     @Id
-    @GeneratedValue
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column("id")
     private UUID id;
 
-    @Column(name = "NUMBER")
+    @Column("number")
     private String number;
 
-    @Column(name = "EXPIRES")
+    @Column("expires")
     private String expires;
 
-    @Column(name = "CVV")
+    @Column("cvv")
     private String cvv;
 
-    @OneToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    @Column("user_id")
+    private String userId;
+
+    /*@OneToOne
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")*/
     private UserEntity user;
 
-    @OneToMany(mappedBy = "cardEntity", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<OrderEntity> orders;
+    // @OneToOne(mappedBy = "cardEntity")
+    private OrderEntity orderEntity;
 
     public UUID getId() {
         return id;
@@ -88,12 +83,53 @@ public class CardEntity {
         return this;
     }
 
-    public List<OrderEntity> getOrderEntity() {
-        return orders;
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
     }
 
-    public CardEntity setOrderEntity(List<OrderEntity> orders) {
-        this.orders = orders;
+    public CardEntity setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
         return this;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public CardEntity setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CardEntity that = (CardEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(number, that.number)
+                && Objects.equals(expires, that.expires) && Objects.equals(cvv, that.cvv)
+                && Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, expires, cvv, userId);
+    }
+
+    @Override
+    public String toString() {
+        return "CardEntity{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", expires='" + expires + '\'' +
+                ", cvv='" + cvv + '\'' +
+                ", userId='" + userId + '\'' +
+                ", user=" + user +
+                ", orderEntity=" + orderEntity +
+                '}';
     }
 }
