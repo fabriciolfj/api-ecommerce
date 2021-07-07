@@ -7,6 +7,8 @@ import com.github.fabriciolfj.apiecommerce.repository.UserRepository;
 import com.github.fabriciolfj.apiecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,27 +20,32 @@ public class UserServiceImpl implements UserService {
   private final UserRepository repository;
 
   @Override
-  public void deleteCustomerById(String id) {
-    repository.deleteById(UUID.fromString(id));
+  public Mono<Void> deleteCustomerById(String id) {
+    return deleteCustomerById(UUID.fromString(id));
   }
 
   @Override
-  public Optional<Iterable<AddressEntity>> getAddressesByCustomerId(String id) {
-    return repository.findById(UUID.fromString(id)).map(UserEntity::getAddresses);
+  public Mono<Void> deleteCustomerById(UUID id) {
+    return repository.deleteById(id).then();
   }
 
   @Override
-  public Iterable<UserEntity> getAllCustomers() {
+  public Flux<AddressEntity> getAddressesByCustomerId(String id) {
+    return repository.getAddressesByCustomerId(id);
+  }
+
+  @Override
+  public Flux<UserEntity> getAllCustomers() {
     return repository.findAll();
   }
 
   @Override
-  public Optional<CardEntity> getCardByCustomerId(String id) {
-    return Optional.of(repository.findById(UUID.fromString(id)).map(UserEntity::getCard).get().get(0));
+  public Mono<CardEntity> getCardByCustomerId(String id) {
+    return repository.findCardByCustomerId(id);
   }
 
   @Override
-  public Optional<UserEntity> getCustomerById(String id) {
+  public Mono<UserEntity> getCustomerById(String id) {
     return repository.findById(UUID.fromString(id));
   }
 }

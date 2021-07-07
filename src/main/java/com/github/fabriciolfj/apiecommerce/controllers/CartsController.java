@@ -2,12 +2,11 @@ package com.github.fabriciolfj.apiecommerce.controllers;
 
 import com.github.fabriciolfj.apiecommerce.api.CartApi;
 import com.github.fabriciolfj.apiecommerce.hateoas.CartRepresentationModelAssembler;
+import com.github.fabriciolfj.apiecommerce.model.Cart;
 import com.github.fabriciolfj.apiecommerce.model.Item;
 import com.github.fabriciolfj.apiecommerce.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

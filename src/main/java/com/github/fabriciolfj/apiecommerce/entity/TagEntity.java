@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Table("tag")
+@Table("ecomm.tag")
 public class TagEntity {
 
     @Id

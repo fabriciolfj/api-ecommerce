@@ -14,11 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table("item")
+@Table("ecomm.item")
 public class ItemEntity {
 
     @Id
-    @Column("ID")
+    @Column("id")
     private UUID id;
 
     @Column("product_id")
@@ -43,7 +43,7 @@ public class ItemEntity {
         return price;
     }
 
-    public ItemEntity setPrice(BigDecimal price) {
+    public ItemEntity setPrice(final BigDecimal price) {
         this.price = price;
         return this;
     }
@@ -59,6 +59,11 @@ public class ItemEntity {
 
     public UUID getProductId() {
         return productId;
+    }
+
+    public ItemEntity setProductId(UUID productId) {
+        this.productId = productId;
+        return this;
     }
 
     @Override

@@ -6,10 +6,10 @@ import com.github.fabriciolfj.apiecommerce.repository.OrderRepository;
 import com.github.fabriciolfj.apiecommerce.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,12 +19,12 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepository orderRepo;
 
     @Override
-    public Optional<AuthorizationEntity> authorize(@Valid final PaymentReq paymentReq) {
-        return Optional.empty();
+    public Mono<AuthorizationEntity> authorize(@Valid Mono<PaymentReq> paymentReq) {
+        return Mono.empty();
     }
 
     @Override
-    public Optional<AuthorizationEntity> getOrdersPaymentAuthorization(@NotNull String orderId) {
+    public Mono<AuthorizationEntity> getOrdersPaymentAuthorization(@NotNull String orderId) {
         return orderRepo.findById(UUID.fromString(orderId)).map(oe -> oe.getAuthorizationEntity());
     }
 }

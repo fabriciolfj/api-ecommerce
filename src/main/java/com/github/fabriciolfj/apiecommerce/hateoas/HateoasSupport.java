@@ -12,8 +12,8 @@ public interface HateoasSupport {
             return UriComponentsBuilder.fromPath("/");
         }
 
-        ServerHttpRequest request = exchange.getRequest();
-        PathContainer contextPath = request.getPath().contextPath();
+        final ServerHttpRequest request = exchange.getRequest();
+        final PathContainer contextPath = request.getPath().contextPath();
 
         return UriComponentsBuilder.fromHttpRequest(request)
                 .replacePath(contextPath.toString())

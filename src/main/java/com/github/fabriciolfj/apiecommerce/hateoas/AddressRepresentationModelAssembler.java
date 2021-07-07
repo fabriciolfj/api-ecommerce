@@ -21,11 +21,6 @@ public class AddressRepresentationModelAssembler implements
 
     private static String serverUri = null;
 
-    /**
-     * Coverts the Address entity to resource
-     *
-     * @param entity
-     */
     @Override
     public Mono<Address> toModel(AddressEntity entity, ServerWebExchange exchange) {
         return Mono.just(entityToModel(entity, exchange));
@@ -37,7 +32,6 @@ public class AddressRepresentationModelAssembler implements
         }
         return serverUri;
     }
-
 
     public Address entityToModel(AddressEntity entity, ServerWebExchange exchange) {
         Address resource = new Address();
@@ -53,17 +47,6 @@ public class AddressRepresentationModelAssembler implements
         return resource;
     }
 
-    public Address getModel(Mono<Address> m) {
-        AtomicReference<Address> model = new AtomicReference<>();
-        m.cache().subscribe(i -> model.set(i));
-        return model.get();
-    }
-
-    /**
-     * Coverts the collection of Product entities to list of resources.
-     *
-     * @param entities
-     */
     public Flux<Address> toListModel(Flux<AddressEntity> entities, ServerWebExchange exchange) {
         if (Objects.isNull(entities)) {
             return Flux.empty();

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Table("product")
+@Table("ecomm.product")
 public class ProductEntity {
 
     @Id

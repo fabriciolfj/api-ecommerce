@@ -41,25 +41,9 @@ public class OrderRepositoryExtImpl implements OrderRepositoryExt {
     private final CartRepository cartRepo;
     private final OrderItemRepository oiRepo;
 
-    private OrderEntity toEntity(NewOrder order, CartEntity c) {
-        OrderEntity orderEntity = new OrderEntity();
-        BeanUtils.copyProperties(order, orderEntity);
-        orderEntity.setUserEntity(c.getUser());
-        orderEntity.setCartId(c.getId());
-        orderEntity.setItems(c.getItems())
-                .setCustomerId(UUID.fromString(order.getCustomerId()))
-                .setAddressId(UUID.fromString(order.getAddress().getId()))
-                .setOrderDate(Timestamp.from(Instant.now()))
-                .setTotal(c.getItems().stream().collect(Collectors.toMap(k -> k.getProductId(),
-                        v -> BigDecimal.valueOf(v.getQuantity()).multiply(v.getPrice())))
-                        .values().stream().reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
-        return orderEntity;
-    }
-
     @Override
     public Mono<OrderEntity> insert(Mono<NewOrder> mdl) {
-        R2dbcEntityTemplate template = new R2dbcEntityTemplate(connectionFactory);
-        AtomicReference<UUID> orderId = new AtomicReference<>();
+        final R2dbcEntityTemplate template = new R2dbcEntityTemplate(connectionFactory);
         Mono<List<ItemEntity>> itemEntities = mdl
                 .flatMap(m -> itemRepo.findByCustomerId(m.getCustomerId()).collectList().cache());
         Mono<CartEntity> cartEntity = mdl
@@ -104,6 +88,22 @@ public class OrderRepositoryExtImpl implements OrderRepositoryExt {
                                 orderEntity.getCartId().toString()).then(Mono.just(orderEntity))
                 );
     }
+
+    private OrderEntity toEntity(final NewOrder order, final CartEntity c) {
+        OrderEntity orderEntity = new OrderEntity();
+        BeanUtils.copyProperties(order, orderEntity);
+        orderEntity.setUserEntity(c.getUser());
+        orderEntity.setCartId(c.getId());
+        orderEntity.setItems(c.getItems())
+                .setCustomerId(UUID.fromString(order.getCustomerId()))
+                .setAddressId(UUID.fromString(order.getAddress().getId()))
+                .setOrderDate(Timestamp.from(Instant.now()))
+                .setTotal(c.getItems().stream().collect(Collectors.toMap(k -> k.getProductId(),
+                        v -> BigDecimal.valueOf(v.getQuantity()).multiply(v.getPrice())))
+                        .values().stream().reduce(BigDecimal::add).orElse(BigDecimal.ZERO));
+        return orderEntity;
+    }
+
 }
 
 class OrderMapper implements BiFunction<Row, Object, OrderEntity> {

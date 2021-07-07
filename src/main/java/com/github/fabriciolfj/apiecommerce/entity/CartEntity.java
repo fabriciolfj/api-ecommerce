@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Table("cart")
+@Table("ecomm.cart")
 public class CartEntity {
 
     @Id

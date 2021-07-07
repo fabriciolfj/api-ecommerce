@@ -1,50 +1,86 @@
 package com.github.fabriciolfj.apiecommerce.service.impl;
 
+import com.github.fabriciolfj.apiecommerce.entity.CartEntity;
 import com.github.fabriciolfj.apiecommerce.entity.ItemEntity;
-import com.github.fabriciolfj.apiecommerce.facade.converters.ItemConverter;
 import com.github.fabriciolfj.apiecommerce.model.Item;
 import com.github.fabriciolfj.apiecommerce.service.ItemService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
-@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemConverter itemConverter;
-
     @Override
-    public ItemEntity create(final Item m) {
-        return itemConverter.toEntity(m);
+    public Mono<ItemEntity> toEntity(Mono<Item> model) {
+        return model.map(m ->
+                new ItemEntity()
+                        .setPrice(m.getUnitPrice())
+                        .setQuantity(m.getQuantity())
+        );
     }
 
     @Override
-    public List<ItemEntity> toEntityList(final List<Item> items) {
+    public Mono<List<Item>> fluxTolList(Flux<ItemEntity> items) {
+        if (Objects.isNull(items)) {
+            return Mono.just(Collections.emptyList());
+        }
+        return items.map(e -> toModel(e)).collectList();
+    }
+
+    @Override
+    public Flux<Item> toItemFlux(Mono<CartEntity> cart) {
+        if (Objects.isNull(cart)) {
+            return Flux.empty();
+        }
+        return cart.flatMapMany(c -> toModelFlux(c.getItems()));
+    }
+
+    @Override
+    public ItemEntity toEntity(Item m) {
+        ItemEntity e = new ItemEntity();
+        e.setProductId(UUID.fromString(m.getId()))
+                .setPrice(m.getUnitPrice())
+                .setQuantity(m.getQuantity());
+        return e;
+    }
+
+    @Override
+    public List<ItemEntity> toEntityList(List<Item> items) {
         if (Objects.isNull(items)) {
             return Collections.emptyList();
         }
-
-        return items.stream().map(m -> create(m)).collect(toList());
+        return items.stream().map(m -> toEntity(m)).collect(toList());
     }
 
     @Override
-    public Item toModel(final ItemEntity e) {
-        final Item m = new Item();
-        m.id(e.getProduct().getId().toString()).unitPrice(e.getPrice()).quantity(e.getQuantity());
+    public Item toModel(ItemEntity e) {
+        Item m = new Item();
+        m.id(e.getProductId().toString())
+                .unitPrice(e.getPrice()).quantity(e.getQuantity());
         return m;
     }
 
     @Override
-    public List<Item> toModelList(final List<ItemEntity> items) {
+    public List<Item> toModelList(List<ItemEntity> items) {
         if (Objects.isNull(items)) {
             return Collections.emptyList();
         }
         return items.stream().map(e -> toModel(e)).collect(toList());
+    }
+
+    @Override
+    public Flux<Item> toModelFlux(List<ItemEntity> items) {
+        if (Objects.isNull(items)) {
+            return Flux.empty();
+        }
+        return Flux.fromIterable(items.stream().map(e -> toModel(e)).collect(toList()));
     }
 }

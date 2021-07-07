@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.Objects;
 import java.util.UUID;
 
-@Table("order_item")
+@Table("ecomm.order_item")
 public class OrderItemEntity {
 
     @Id

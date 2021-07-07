@@ -6,6 +6,7 @@ import com.github.fabriciolfj.apiecommerce.hateoas.AddressRepresentationModelAss
 import com.github.fabriciolfj.apiecommerce.hateoas.CardRepresentationModelAssembler;
 import com.github.fabriciolfj.apiecommerce.hateoas.UserRepresentationModelAssembler;
 import com.github.fabriciolfj.apiecommerce.model.Address;
+import com.github.fabriciolfj.apiecommerce.model.Card;
 import com.github.fabriciolfj.apiecommerce.model.User;
 import com.github.fabriciolfj.apiecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Table("user")
+@Table("ecomm.user")
 public class UserEntity {
 
     @Id

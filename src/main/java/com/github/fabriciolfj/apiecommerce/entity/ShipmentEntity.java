@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Table("shipment")
+@Table("ecomm.shipment")
 public class ShipmentEntity {
     @Id
     @Column("id")

@@ -28,42 +28,27 @@ public class CardRepresentationModelAssembler implements
         return serverUri;
     }
 
-    /**
-     * Coverts the Card entity to resource
-     *
-     * @param entity
-     */
     @Override
     public Mono<Card> toModel(CardEntity entity, ServerWebExchange exchange) {
         return Mono.just(entityToModel(entity, exchange));
     }
 
     public Card entityToModel(CardEntity entity, ServerWebExchange exchange) {
-        Card resource = new Card();
+        final Card resource = new Card();
+
         if (Objects.isNull(entity)) {
             return resource;
         }
+
         BeanUtils.copyProperties(entity, resource);
         resource.setId(Objects.nonNull(entity.getId()) ? entity.getId().toString() : "");
         resource.setCardNumber(entity.getNumber());
         String serverUri = getServerUri(exchange);
         resource.add(Link.of(String.format("%s/api/v1/cards", serverUri)).withRel("cards"));
-        resource.add(
-                Link.of(String.format("%s/api/v1/cards/%s", serverUri, entity.getId())).withRel("self"));
+        resource.add(Link.of(String.format("%s/api/v1/cards/%s", serverUri, entity.getId())).withRel("self"));
         return resource;
     }
 
-    public Card getModel(Mono<Card> m, ServerWebExchange exchange) {
-        AtomicReference<Card> model = new AtomicReference<>();
-        m.cache().subscribe(i -> model.set(i));
-        return model.get();
-    }
-
-    /**
-     * Coverts the collection of Product entities to list of resources.
-     *
-     * @param entities
-     */
     public Flux<Card> toListModel(Flux<CardEntity> entities, ServerWebExchange exchange) {
         if (Objects.isNull(entities)) {
             return Flux.empty();

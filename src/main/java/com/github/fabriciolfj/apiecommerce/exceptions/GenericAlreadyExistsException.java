@@ -1,10 +1,6 @@
 package com.github.fabriciolfj.apiecommerce.exceptions;
 
-/**
- * @author : github.com/sharmasourabh
- * @project : Chapter04 - Modern API Development with Spring and Spring Boot
- **/
-public class GenericAlreadyExistsException extends RuntimeException {
+public class GenericAlreadyExistsException extends BusinessException {
 
   private static final long serialVersionUID = 1L;
   private final String errMsgKey;

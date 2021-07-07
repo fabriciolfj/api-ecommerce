@@ -5,6 +5,7 @@ import com.github.fabriciolfj.apiecommerce.repository.ShipmentRepository;
 import com.github.fabriciolfj.apiecommerce.service.ShipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShipmentServiceImpl implements ShipmentService {
 
-  private final ShipmentRepository repository;
+    private final ShipmentRepository repository;
 
-  @Override
-  public Iterable<ShipmentEntity> getShipmentByOrderId(@Min(value = 1L, message = "Invalid shipment ID.") final String id) {
-    return repository.findAllById(List.of(UUID.fromString(id)));
-  }
+    @Override
+    public Flux<ShipmentEntity> getShipmentByOrderId(@Min(value = 1L, message = "Invalid shipment ID.") String id) {
+        return repository.getShipmentByOrderId(id);
+    }
 }

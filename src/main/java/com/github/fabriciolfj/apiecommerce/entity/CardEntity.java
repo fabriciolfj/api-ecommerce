@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table("card")
+@Table("ecomm.card")
 public class CardEntity {
     @Id
     @Column("id")

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Table("orders")
+@Table("ecomm.orders")
 public class OrderEntity {
 
     @Id

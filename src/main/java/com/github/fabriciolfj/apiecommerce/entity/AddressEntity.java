@@ -2,6 +2,7 @@ package com.github.fabriciolfj.apiecommerce.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -10,14 +11,15 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.List;
 import java.util.UUID;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table("address")
+@Table("ecomm.address")
 public class AddressEntity {
 
   @Id
-  @Column("ID")
+  @Column("id")
   private UUID id;
 
   @Column("NUMBER")

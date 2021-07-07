@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table("user_address")
+@Table("ecomm.user_address")
 public class UserAddressEntity {
 
   @Column("user_id")
