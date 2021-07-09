@@ -22,3 +22,9 @@ spring:
   h2:
     console.enabled: true
     console.settings.web-allow-others: false
+
+
+app.security.jwt.key-alias: jwt-sign-key
+app.security.jwt.private-key-passphrase: password
+app.security.jwt.keystore-location: jwt-keystore.jks
+app.security.jwt.keystore-password: password
