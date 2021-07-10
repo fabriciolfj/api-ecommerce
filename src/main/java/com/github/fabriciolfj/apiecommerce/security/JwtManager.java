@@ -58,8 +58,7 @@ public class JwtManager {
                                 .collect(toList()))
                 .withIssuedAt(new Date(now))
                 .withExpiresAt(new Date(now + EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(SECRET_KEY.getBytes(StandardCharsets.UTF_8)));
-                //.sign(Algorithm.RSA256(publicKey, privateKey));
+                .sign(Algorithm.RSA256(publicKey, privateKey));
     }
 
     @PostConstruct

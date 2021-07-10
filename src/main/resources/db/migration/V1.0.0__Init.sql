@@ -86,6 +86,15 @@ create TABLE IF NOT EXISTS ecomm.user (
 	PRIMARY KEY(id)
 );
 
+create TABLE IF NOT EXISTS ecomm.user_token (
+	id uuid NOT NULL DEFAULT random_uuid(),
+	refresh_token varchar(128),
+	user_id uuid NOT NULL,
+	PRIMARY KEY(id),
+	FOREIGN KEY (user_id)
+		REFERENCES ecomm.user(id)
+);
+
 create TABLE IF NOT EXISTS ecomm.address (
 	id uuid NOT NULL DEFAULT random_uuid(),
 	number varchar(24),

@@ -3,18 +3,7 @@ package com.github.fabriciolfj.apiecommerce.entity;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -51,6 +40,10 @@ public class UserEntity {
 
   @Column(name = "USER_STATUS")
   private String userStatus;
+
+  @Column(name = "ROLE")
+  @Enumerated(EnumType.STRING)
+  private RoleEnum role = RoleEnum.USER;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinTable(
@@ -176,5 +169,13 @@ public class UserEntity {
   public UserEntity setOrder(List<OrderEntity> order) {
     this.orders = order;
     return this;
+  }
+
+  public RoleEnum getRole() {
+    return role;
+  }
+
+  public void setRole(RoleEnum role) {
+    this.role = role;
   }
 }

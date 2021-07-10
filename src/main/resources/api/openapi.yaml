@@ -133,6 +133,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SignedInUser'
+    delete:
+      tags:
+        - user
+      summary: Signouts the customer (user)
+      description: Signouts the customer (user). It removes the refresh token from DB. Last issued JWT should be removed from client end that if not removed last for given expiration time.
+      operationId: signOut
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+      responses:
+        202:
+          description: Accepts the request for logout.
+  /api/v1/auth/token/refresh:
+    post:
+      tags:
+        - user
+      summary: Provides new JWT based on valid refresh token.
+      description: Provides new JWT based on valid refresh token.
+      operationId: getAccessToken
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+      responses:
+        200:
+          description: For successful operation.
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SignedInUser'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedInUser'
+
   /api/v1/carts/{customerId}/items:
     get:
       tags:
