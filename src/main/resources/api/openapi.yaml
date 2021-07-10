@@ -92,9 +92,6 @@ paths:
       operationId: signUp
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/User'
           application/json:
             schema:
               $ref: '#/components/schemas/User'
@@ -102,9 +99,6 @@ paths:
         201:
           description: For successful user creation.
           content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SignedInUser'
             application/json:
               schema:
                 $ref: '#/components/schemas/SignedInUser'

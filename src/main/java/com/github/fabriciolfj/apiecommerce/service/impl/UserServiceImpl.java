@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(propagation = Propagation.REQUIRED)
   public SignedInUser createUser(User user) {
     return of(repository.findByUsernameOrEmail(user.getUsername(), user.getEmail()))
             .filter(result -> result == 0)
@@ -108,8 +111,9 @@ public class UserServiceImpl implements UserService {
   private UserEntity toEntity(User user) {
     UserEntity userEntity = new UserEntity();
     BeanUtils.copyProperties(user, userEntity);
+    userEntity.setId(UUID.randomUUID());
     userEntity.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-    return userEntity;
+    return repository.save(userEntity);
   }
 
   private SignedInUser createSignedUserWithRefreshToken(UserEntity userEntity) {
@@ -122,12 +126,16 @@ public class UserServiceImpl implements UserService {
             .password(userEntity.getPassword())
             .authorities(Objects.nonNull(userEntity.getRole()) ? userEntity.getRole().name() : "")
             .build());
-    return new SignedInUser().username(userEntity.getUsername()).accessToken(token);
+    var signed = new SignedInUser();
+    signed.username(userEntity.getUsername());
+    signed.accessToken(token);
+    return signed;
   }
 
   private String createRefreshToken(UserEntity user) {
     String token = RandomHolder.randomKey(128);
-    userTokenRepository.save(new UserTokenEntity().setRefreshToken(token).setUser(user));
+    var entity = new UserTokenEntity().setRefreshToken(token).setUser(user);
+    userTokenRepository.save(entity);
     return token;
   }
 
