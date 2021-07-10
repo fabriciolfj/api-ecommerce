@@ -7,6 +7,8 @@ import com.github.fabriciolfj.apiecommerce.repository.AddressRepository;
 import com.github.fabriciolfj.apiecommerce.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteAddressesById(String id) {
         repository.deleteById(UUID.fromString(id));
     }

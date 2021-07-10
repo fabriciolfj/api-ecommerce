@@ -1,3 +1,6 @@
+logging:
+  level.org.springframework: DEBUG
+
 spring:
   datasource:
     name: ecomm

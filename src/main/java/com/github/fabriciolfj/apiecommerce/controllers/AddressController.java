@@ -1,16 +1,19 @@
 package com.github.fabriciolfj.apiecommerce.controllers;
 
 import com.github.fabriciolfj.apiecommerce.api.AddressApi;
+import com.github.fabriciolfj.apiecommerce.entity.RoleEnum;
 import com.github.fabriciolfj.apiecommerce.hateoas.AddressRepresentationModelAssembler;
 import com.github.fabriciolfj.apiecommerce.model.AddAddressReq;
 import com.github.fabriciolfj.apiecommerce.model.Address;
 import com.github.fabriciolfj.apiecommerce.service.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.github.fabriciolfj.apiecommerce.entity.RoleEnum.ADMIN;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
@@ -30,6 +33,7 @@ public class AddressController implements AddressApi {
                 .map(assembler::toModel).get());
     }
 
+    @PreAuthorize("hasRole('" + RoleEnum.Const.ADMIN + "')")
     @Override
     public ResponseEntity<Void> deleteAddressesById(String id) {
         service.deleteAddressesById(id);

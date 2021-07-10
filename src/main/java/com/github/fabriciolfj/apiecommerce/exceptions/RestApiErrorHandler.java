@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +33,17 @@ public class RestApiErrorHandler {
         error.setReqMethod(request.getMethod());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Error> handlAccessDeniedException(HttpServletRequest request, AccessDeniedException ex, Locale locale) {
+        var error = ErrorUtils.createError(ErrorCode.GENERIC_ERROR.getErrMsgKey(),
+                ErrorCode.GENERIC_ERROR.getErrCode(),
+                HttpStatus.FORBIDDEN.value());
+        error.setUrl(request.getRequestURL().toString());
+        error.setReqMethod(request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
