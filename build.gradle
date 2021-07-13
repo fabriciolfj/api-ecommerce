@@ -50,7 +50,7 @@ configurations {
 	integrationTestRuntime.extendsFrom testRuntime
 }
 
-task integrationTest(type: Test) {
+/*task integrationTest(type: Test) {
 	useJUnitPlatform()
 	description = 'Runs the integration tests.'
 	group = 'verification'
@@ -58,7 +58,7 @@ task integrationTest(type: Test) {
 	classpath = sourceSets.integrationTest.runtimeClasspath
 }
 check.dependsOn integrationTest
-integrationTest.mustRunAfter test
+integrationTest.mustRunAfter test*/
 
 test {
 	jvmArgs '--enable-preview'
