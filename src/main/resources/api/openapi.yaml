@@ -111,9 +111,6 @@ paths:
       operationId: signIn
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/SignInReq'
           application/json:
             schema:
               $ref: '#/components/schemas/SignInReq'
@@ -121,9 +118,6 @@ paths:
         200:
           description: For user sign-in. Once successful, user receives the access and refresh token.
           content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SignedInUser'
             application/json:
               schema:
                 $ref: '#/components/schemas/SignedInUser'
@@ -135,9 +129,6 @@ paths:
       operationId: signOut
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/RefreshToken'
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshToken'
@@ -153,9 +144,6 @@ paths:
       operationId: getAccessToken
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/RefreshToken'
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshToken'
@@ -163,9 +151,6 @@ paths:
         200:
           description: For successful operation.
           content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SignedInUser'
             application/json:
               schema:
                 $ref: '#/components/schemas/SignedInUser'
@@ -777,6 +762,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Authorization'
+  /api/v1/shipping/{id}:
     get:
       tags:
         - shipment

@@ -1,6 +1,7 @@
 package com.github.fabriciolfj.apiecommerce.service.impl;
 
 import com.github.fabriciolfj.apiecommerce.entity.AddressEntity;
+import com.github.fabriciolfj.apiecommerce.exceptions.ResourceNotFoundException;
 import com.github.fabriciolfj.apiecommerce.facade.converters.AddressConverter;
 import com.github.fabriciolfj.apiecommerce.model.AddAddressReq;
 import com.github.fabriciolfj.apiecommerce.repository.AddressRepository;
@@ -28,7 +29,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteAddressesById(String id) {
-        repository.deleteById(UUID.fromString(id));
+        try {
+            repository.deleteById(UUID.fromString(id));
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("No Address found with id %s.", id));
+        }
     }
 
     @Override

@@ -19,9 +19,6 @@ spring:
     shemas: ecomm
     user: sa
     password:
-  h2:
-    console.enabled: true
-    console.settings.web-allow-others: false
 
 
 app.security.jwt.key-alias: jwt-sign-key

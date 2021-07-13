@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.util.Locale;
 
 @Log4j2
@@ -119,6 +120,17 @@ public class RestApiErrorHandler {
         error.setReqMethod(request.getMethod());
         log.info("JsonParseException :: request.getMethod(): " + request.getMethod());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Error> handleResourceNotFoundException(HttpServletRequest request,
+                                                                 ResourceNotFoundException ex, Locale locale) {
+        Error error = ErrorUtils
+                .createError(
+                        String.format("%s %s", ErrorCode.RESOURCE_NOT_FOUND.getErrMsgKey(), ex.getMessage()),
+                        ex.getErrorCode(),
+                        HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
 }
