@@ -42,12 +42,15 @@ import static com.github.fabriciolfj.apiecommerce.security.Constants.*;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String ACTUATOR_URL_PREFIX = "/actuator/**";
+
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private JwtManager jwtManager;
     @Autowired
     private UserDetailsService userDetailsService;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, REFRESH_URL).permitAll()
                 .antMatchers(HttpMethod.GET, PRODUCTS_URL).permitAll()
                 .antMatchers(H2_URL_PREFIX).permitAll()
+                .antMatchers(ACTUATOR_URL_PREFIX).permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/addresses/**")
                 .hasAuthority(RoleEnum.ADMIN.getAuthority())
                 .anyRequest().authenticated()
